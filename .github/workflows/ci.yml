@@ -27,17 +27,25 @@ jobs:
     - name: Build project
       run: npm run build
 
-    - name: Deploy to S3
+    - name: Verify AWS CLI Installation
+      run: aws --version
+
+    - name: Configure AWS CLI
       run: |
-        aws s3 sync out/ s3://$S3_BUCKET --delete
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set default.region us-east-1
+
+    - name: Verify S3 Bucket
+      run: aws s3 ls s3://$S3_BUCKET
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         S3_BUCKET: ${{ secrets.S3_BUCKET }}
 
-    - name: Invalidate CloudFront
-      run: |
-        aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+    - name: Deploy to S3
+      run: aws s3 sync out/ s3://$S3_BUCKET --delete
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        S3_BUCKET: ${{ secrets.S3_BUCKET }}
