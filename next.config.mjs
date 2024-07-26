@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+const nextConfig = {
+    reactStrictMode: true,
+    swcMinify: true,
+    // Add this line to configure static export
+    output: 'export',
+    trailingSlash: true,
+  }
+  
+  module.exports = nextConfig
+  
