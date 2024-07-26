@@ -2,10 +2,9 @@
 const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
-    // Add this line to configure static export
-    output: 'export',
+    output: 'export', // Add this line to configure static export
     trailingSlash: true,
-  }
+  };
   
-  module.exports = nextConfig
+  export default nextConfig;
   
